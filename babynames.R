@@ -1,37 +1,26 @@
 library(babynames)
-help("babynames")
 
-babynames <- babynames
-str(babynames)
-levels(babynames$name)
-
-year1993 <- subset(babynames, year == 1993)
-year1993$name <- as.factor(year1993$name)
-levels(year1993$name)
-
-nicole <- subset(babynames, name == "Nicole")
-nicole <- subset(nicole, sex == "F")
-
-max(nicole$n)
-min(nicole$n)
 
 #### given name, what year was it most popular?
 name_popularyear <- function(babynames, name_in_quotes) {
   desired_name <- subset(babynames, name == name_in_quotes)
+  # create an empty dataframe
+  newdata <- matrix(nrow = 1, ncol = 2)
+  newdata <- data.frame(newdata)
+  row.names(newdata) <- name_in_quotes
+  colnames(newdata) <- c("Year", "#ofpeople")
   # for loop
   for (i in 1:nrow(desired_name)) {
     maxnumber <- max(desired_name$n)
     if (desired_name$n[i] == maxnumber) {
-      print(name_in_quotes)
-      print("year")
-      print(desired_name$year[i])
-      print("how many people")
-      print(maxnumber)
+      # Add year to dataframe
+      newdata[1,1] <- desired_name$year[i]
+      # Add the number of people 
+      newdata[1,2] <- maxnumber
     }
   }
+  return(newdata)
 }
-
-name_popularyear(babynames, "Nicole")
 
 #### given year, what name was more popular?
 year_popularname <- function(babynames, Year) {
@@ -46,8 +35,6 @@ year_popularname <- function(babynames, Year) {
     }
   }
 }
-
-year_popularname(babynames, 1993)
 
 #### try and make one where it returns a table by sex 
 year_popname_bysex <- function(babynames, Year) {
@@ -89,9 +76,6 @@ year_popname_bysex <- function(babynames, Year) {
   } 
 }
 
-
-year_popname_bysex(babynames, 1993)
-year_popname_bysex(babynames, 1961) 
 
 
 
