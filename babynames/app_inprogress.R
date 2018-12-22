@@ -36,6 +36,45 @@ name_popularyear <- function(babynames, name_in_quotes) {
   return(newdata)
 }
 
+year_popname_bysex <- function(babynames, Year) {
+  # Get dataframe with just the year
+  desired_year <- subset(babynames, year == Year)
+  # loop through for males and females
+  for (i in 1:nrow(desired_year)) {
+    # First, subset data by sex 
+    female <- subset(desired_year, sex == "F")
+    male <- subset(desired_year, sex == "M")
+    # create empty matrix to return at the end 
+    popularnames <- matrix(nrow = 2, ncol = 3)
+    popularnames <- data.frame(popularnames)
+    row.names(popularnames) <- c("Female", "Male")
+    colnames(popularnames) <- c("most popular name", "year", "# of people")
+    popularnames[,2] <- Year
+    
+    # starting with females 
+    for (i in 1:nrow(female)) {
+      maxnum <- max(female$n)
+      if (female$n[i] == maxnum) {
+        # Add the most popular girl name to dataframe
+        popularnames[1,1] <- female$name[i]
+        # Add the number of people with that name
+        popularnames[1,3] <- maxnum
+      }
+    }
+    # now males 
+    for (i in 1:nrow(male)) {
+      maxnum_m <- max(male$n)
+      if (male$n[i] == maxnum_m) {
+        # Add the most popular male name to dataframe
+        popularnames[2,1] <- male$name[i]
+        # Add the number of people with that name
+        popularnames[2,3] <- maxnum_m
+      }
+    }
+    return(popularnames)
+  } 
+}
+
 ## UserInterface 
 
 ui <- tagList(
@@ -51,21 +90,35 @@ ui <- tagList(
              ),
              mainPanel(
                h4("Top 10 years name is most popular"),
-               dataTableOutput("table")
+               dataTableOutput("names")
              )# close mainPanel
     ),# close tabPanel
-    tabPanel("Year", "This panel is intentionally left blank")
+    tabPanel("Year", 
+             sidebarPanel(
+               textInput("numeric", "Type year here:", "year"),
+               br(),
+               actionButton("goButton2", "Go!")
+             ),
+             mainPanel(
+               h4("Top 10 names that are most popular for a given year"),
+               dataTableOutput("years")
+             ))
   ) # close navbarPage
 )# close tagList
 
-# Define server logic required to draw a histogram
+# Define server 
 server <- function(input, output) {
-    output$table <- renderDataTable({
+    output$names <- renderDataTable({
       input$goButton
 
       name_popularyear(babynames, input$text)
     })
-  }
+    output$years <- renderDataTable({
+      input$goButton2
+      
+      year_popname_bysex(babynames, input$numeric)
+    })
+}
 
 # Run the application 
 shinyApp(ui = ui, server = server)
