@@ -1,0 +1,12 @@
+name: USbabynames-website
+title: USbabynames-website
+username:
+account: nicoleburke
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 622161
+bundleId: 1779332
+url: https://nicoleburke.shinyapps.io/USbabynames-website/
+when: 1545457716.50805
+asMultiple: FALSE
+asStatic: FALSE
