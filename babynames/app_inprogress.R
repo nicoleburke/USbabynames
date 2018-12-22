@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(shinythemes)
 library(babynames)
 #### given name, what year was it most popular?
 name_popularyear <- function(babynames, name_in_quotes) {
@@ -35,25 +36,31 @@ name_popularyear <- function(babynames, name_in_quotes) {
   return(newdata)
 }
 
-ui <- fluidPage(
-  titlePanel("US Babynames"),
-  fluidRow(
-    column(4, wellPanel(
-      textInput("text", "Type name here:", "'name'"),
-      
-      br(),
-      actionButton("goButton", "Go!")
-    )),
-    column(8,
-           h4("Top 10 years name is most popular"),
-           dataTableOutput("summary")
-    )
-  )
-)
+## UserInterface 
+
+ui <- tagList(
+  #shinythemes::themeSelector(),
+  navbarPage(
+    theme = "flatly",
+    "US Babynames: 1800-2015",
+    tabPanel("Names",
+             sidebarPanel(
+               textInput("text", "Type name here:", "'name'"),
+               br(),
+               actionButton("goButton", "Go!")
+             ),
+             mainPanel(
+               h4("Top 10 years name is most popular"),
+               dataTableOutput("table")
+             )# close mainPanel
+    ),# close tabPanel
+    tabPanel("Year", "This panel is intentionally left blank")
+  ) # close navbarPage
+)# close tagList
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-    output$summary <- renderDataTable({
+    output$table <- renderDataTable({
       input$goButton
 
       name_popularyear(babynames, input$text)
