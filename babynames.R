@@ -1,9 +1,18 @@
 library(babynames)
 
 
+nicole <- subset(babynames, name == "Nicole")
+nicole <- nicole[order(nicole$n, decreasing = TRUE),]
+nicole <- nicole[c(1:10),]
+
 #### given name, what year was it most popular?
 name_popularyear <- function(babynames, name_in_quotes) {
+  # subset datasets by name
   desired_name <- subset(babynames, name == name_in_quotes)
+  # re-order the dataset by most popular 
+  desired_name <- desired_name[order(desired_name$n, decreasing = TRUE),]
+  # get the top 10
+  desired_name <- desired_name[c(1:10),]
   # create an empty dataframe
   newdata <- matrix(nrow = 1, ncol = 2)
   newdata <- data.frame(newdata)
@@ -11,12 +20,12 @@ name_popularyear <- function(babynames, name_in_quotes) {
   colnames(newdata) <- c("Year", "#ofpeople")
   # for loop
   for (i in 1:nrow(desired_name)) {
-    maxnumber <- max(desired_name$n)
-    if (desired_name$n[i] == maxnumber) {
+    # just get the loop to go through so the function will work! 
+    if (desired_name$n[i] > 0) {
       # Add year to dataframe
-      newdata[1,1] <- desired_name$year[i]
+      newdata[i,1] <- desired_name$year[i]
       # Add the number of people 
-      newdata[1,2] <- maxnumber
+      newdata[i,2] <- desired_name$n[i]
     }
   }
   return(newdata)
