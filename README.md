@@ -1,4 +1,4 @@
-# babynamesShinyapp
+# USbabynames
 I made a website using the new babynames package! 
 
 This website is simple:
